@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VBGRAMG | Pattiam Grama Panchayath Monitoring System</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+html{scroll-behavior:smooth}
+body{
+    min-height:100vh;color:#263238;
+    background:linear-gradient(rgba(255,255,255,.82),rgba(245,250,248,.90)),
+               url("images/background.jpg") center/cover fixed no-repeat;
+}
+.header{
+    min-height:82px;padding:15px 28px;color:#fff;
+    display:flex;justify-content:space-between;align-items:center;
+    background:linear-gradient(135deg,#064e3b,#047857,#0f766e);
+    box-shadow:0 4px 15px rgba(0,0,0,.20);position:sticky;top:0;z-index:10
+}
+.header-left{display:flex;align-items:center;gap:14px}
+.logo{width:52px;height:52px;border-radius:50%;background:#fff;color:#047857;
+      display:grid;place-items:center;font-weight:800;box-shadow:0 3px 8px #0003}
+.header h1{font-size:20px;margin-bottom:4px}
+.header p{font-size:12px;opacity:.9}
+.user{text-align:right;font-size:13px}
+.layout{display:flex;min-height:calc(100vh - 82px)}
+.sidebar{width:265px;background:#fffffff2;border-right:1px solid #dce7e3;padding:18px 11px;flex-shrink:0}
+.sidebar-title{padding:10px 14px 14px;color:#064e3b;font-size:13px;font-weight:800;
+               text-transform:uppercase;border-bottom:1px solid #e5e7eb;margin-bottom:9px}
+.menu{list-style:none}
+.menu li{margin:4px 0}
+.menu a{display:flex;gap:9px;align-items:center;padding:10px 12px;border-radius:8px;
+        color:#374151;text-decoration:none;font-size:12.5px;transition:.2s}
+.menu a:hover{background:#dff7f2;color:#047857;transform:translateX(3px)}
+.menu a.active{background:#047857;color:#fff;font-weight:bold}
+.category{padding:12px 12px 5px;color:#047857;font-size:11px;font-weight:bold;text-transform:uppercase}
+.main{flex:1;padding:26px;min-width:0}
+.page-title{margin-bottom:20px}
+.page-title h2{color:#064e3b;font-size:25px;margin-bottom:6px}
+.page-title p{color:#64748b;font-size:13px}
+.filter-box,.panel,.quick-card{
+    background:#ffffffed;border:1px solid #e4ebe8;
+    box-shadow:0 5px 18px rgba(0,0,0,.07)
+}
+.filter-box{padding:19px;border-radius:14px;margin-bottom:20px}
+.filter-title{font-size:15px;font-weight:bold;color:#064e3b;margin-bottom:14px}
+.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+label{display:block;font-size:11px;color:#4b5563;font-weight:bold;margin-bottom:5px}
+select{width:100%;padding:10px;border:1px solid #d1d5db;border-radius:7px;background:#fff;outline:none}
+select:focus{border-color:#047857;box-shadow:0 0 0 3px #0478571c}
+.report-button{margin-top:15px;border:0;border-radius:7px;padding:10px 20px;
+               color:#fff;background:linear-gradient(135deg,#047857,#059669);
+               font-weight:bold;cursor:pointer;transition:.2s}
+.report-button:hover{transform:translateY(-2px);box-shadow:0 5px 13px #0478574d}
+.quick-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.quick-card{padding:16px;border-radius:12px;border-top:4px solid #10b981;transition:.2s}
+.quick-card:hover{transform:translateY(-3px)}
+.quick-card h4{font-size:11px;color:#6b7280;margin-bottom:7px}
+.quick-number{font-size:23px;font-weight:800;color:#064e3b}
+.quick-small{font-size:10px;color:#059669;margin-top:4px}
+.dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.panel{padding:18px;border-radius:13px;margin-bottom:20px}
+.panel-title{font-size:16px;font-weight:bold;color:#064e3b;padding-bottom:11px;
+             margin-bottom:10px;border-bottom:1px solid #e5e7eb}
+.link-list{list-style:none}
+.link-list li{margin:6px 0}
+.link-list a{display:flex;align-items:center;gap:9px;padding:10px 11px;background:#f8fafc;
+             border-radius:7px;text-decoration:none;color:#374151;font-size:12px;
+             border-left:3px solid transparent;transition:.2s}
+.link-list a:hover{background:#ecfdf5;color:#047857;border-left-color:#10b981;padding-left:15px}
+.alert{padding:11px;border-radius:7px;margin-bottom:9px;font-size:12px}
+.alert-success{background:#ecfdf5;border-left:4px solid #10b981;color:#166534}
+.alert-warning{background:#fff7ed;border-left:4px solid #f97316;color:#9a3412}
+.alert-danger{background:#fef2f2;border-left:4px solid #ef4444;color:#991b1b}
+footer{background:#064e3b;color:#ffffffd9;text-align:center;padding:15px;font-size:11px}
+@media(max-width:1100px){
+    .quick-cards{grid-template-columns:repeat(2,1fr)}
+    .filters{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:850px){
+    .sidebar{width:220px}.dashboard-grid{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+    .header{padding:12px 15px}.header h1{font-size:14px}.header p{font-size:10px}
+    .user{display:none}.layout{display:block}.sidebar{width:100%;border-right:0;border-bottom:1px solid #ddd}
+    .main{padding:14px}.filters,.quick-cards{grid-template-columns:1fr}
+    .page-title h2{font-size:20px}
+}
+</style>
+</head>
+
+<body>
+<header class="header">
+    <div class="header-left">
+        <div class="logo">GP</div>
+        <div>
+            <h2>Viksit Bharat – Guarantee for Rozgar &amp; Ajeevika Mission (Gramin)</h2>
+            <p><h1>Pattiam Grama Panchayath Level Monitoring System</h1></p>
+        </div>
+    </div>
+    <div class="user"><strong><h3>VBGRAMG CELL</h3></strong><br><small>Pattiam Grama Panchayath</small></div>
+</header>
+
+<div class="layout">
+<aside class="sidebar">
+    <div class="sidebar-title">Monitoring Menu</div>
+    <ul class="menu">
+        <li><a class="active" href="https://vbgramgrep.dord.gov.in/VBGRAMG/vbgramg_ataglance/At_a_glance.aspx">📊 At a Glance</a></li>
+        <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/IndexFrame.aspx?payload=YLmrE507QQfriYhdbMs3gfctqFQJJ-TqOOipwDdw7UkCeYYuAXsIoFeZYwyWB67LZsMAjnZouO3jaAzr0eZxLsiD7aPHr1M-ZpuqVYK9FQm9ogzX1Zg8SnUtoAMLksbMW0ZWuqbKz_jdM6Ljo5PJzioV2-ybyfusIHJucva2PJ2W6s4MUrB8CRw2fm15Zr2AfvQltJZ-yWVkNfNeEXY_HCLCN5KK_AGpn2R6xO9Fe839muA-mED1XqCvvE8el5pRfIlcZLtFH9jMirUI_lkDv8my8Eopha24kIO7iTPMZZg">📈 Pattiam Report</a></li>
+        <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/work_register.aspx?payload=j5kL91J0CQNvBUSaM35vm34yr7dQQVvIXW5vKxosORettfKV1eRPNjfGVR2_MKLiuia7L-LrdIxXmfDFCdJ5V6SDAb_0qdJImtB7AyWrxO1_2BYQZUiK6EUuBLoBwrCC7sI5WTBDOr_1kqnPGsrV_GKJBDOoGnwYBtEjSWhcaBN62f6of388n9CVCW7OtPl5lESToukHVxGlurD5B8VODS6P-JNi_BAmN6hc7OrqqSF1C6Re-gcSPbenuj2QW5z9X5A2zmThjDS-gVyAbr24Zy4Z0Ej4vUN0T7XvkQa-l2blZFnKw-4iMtYgeMv0rJEk">📋 Works Register</a></li>
+        <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/SocialAudit/SA_LoginReport.aspx?payload=E6RKOeCPeOo6reqeD89otJsyTIG9maYHozvfD-wlw3w">🔍 Social Audit</a></li>
+        <li><a href="https://vbgramgrep.dord.gov.in/vbgramg/specific_work_search_rpt.aspx?payload=KYSJKaXif1QGS8gfmp3-OgiU1xIsml0TkDkhV0q1RZQnisIhdjc0Dtr2AbIBm2Vx7wTUWG0eZ8ZMtladVu7WD_Tazb83GTg3ZgnkiK0qU5AxwnQ8s4fysJnSONOFsU3O2LQ2PxPuzdgAROr6DJ0DLiZV9NX1KO4-97HBQY4uvYrzpcBCgBTX9-LSHux6Boli">📈 E-Work File</a></li>
+<li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/Citizen_html/Musternew.aspx?payload=s6EmmQIFlnv6gb9qCpo2vkOd9E_sNihrr2MV0jxXTNGxN-mQP-2MnzD0dQSUiEUgwTQJRX0t4uqq1CIpvXmKYfxqE1HbLlKTqext1-pxb10G9B3ve7SfMKCyKffCmLWfqdWWCPmtbysam2DN5-Ak9Pzim5oZ6PJ2FGuGGH4dSG0orGZpKsHKI7-uD-nagyKyLEUCv6Pot6YIouXDlT7nKH_p_H5b6h5V-Tt4UxwN1bznbLgEx-joSkRCpuPZcLHFX-X5UQfGOHoHD3_QtsjHXHqLhb5z0LFDOPE2WFiPkgiE6nfhVXSRUeacSbfnHWq2xMMR-bCmEr0cjza-GHG94Q">📑 Muster Rolls</a></li>
+        <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/state_html/emuster_wagelist_rpt.aspx?payload=rz51zj5GVHXD8X-Lxo0NxuDgv65mW-DXikqnqEKq9uxFOjyaRGgbok_4w8mBlfzXT2JOgLQhK9XD7e01x0Jc06rdZSn-bJKakG_eSW4go3Kw6wvGpUeBIsTzw8Ijcwa37TVxm6fFY8s4Vg56hhWHxkL8IaCiT7opJXV-2PMaNRKrnQTuue_rej3w11271Qge72DddAwDxYrNx2XRASGfEou1zpYr4Vw93ImV3UNT8_LG9ahYEeI4ZfFsbnMfD75ioeL_alRwWii_oe5ok7WHRQ">📑 E-Muster &amp; Wagelist</a></li>
+        <li class="category">Dynamic Report </li>
+        <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/dynamic_work_details.aspx?payload=8Ql0m6e1tpNH-RKhY0AaOcuOxm6xfdkh-giPQjK5PLhn8c9J_gzy5TNeS16kJij1q3taxz6or-Lkc_JJZzsnve5ERJclLKMInhoYp1TugKNmsDPjtWl5tJnh64UV7eZo3cfV8p4_WJJVHSldkBlEK76Q3Vc9x7_N-wsbGU2Tqg2OJZyi_AvL0XTMb5FY-baa">❗ Work Report</a></li>
+        <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/dynamic_account_sk_ssk.aspx?payload=9z_tV5HIWGj2ALKzyCUkqIZW3RtqbpGfHVR16uBdWLDerDVJSxnCvx6sN6P9inZftU-MutZk3keiEAMc3x9igOspVFA-bFpiI7k-R2y2ar973ofmATJZTm_e9cSukaT4l1sF2k0WtTrrrkcsMeVOA7nvwNrsPHSeD8NUOmp2BaGs3ounC7o9lfDUxBTWQL8v">❗ Skilled Report</a></li>
+        <li class="category">Tracking &amp; Alerts</li>
+        <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/dynamic_muster_track.aspx?payload=o7xHVYdnJB3F3qu_NkrdCnEQXrmkGD2Rony5SwLZrRT4UZHdU8FmYr7ZIzY5OfZ0fV3r0q80VP6LtJr0YBYBK_X3CEAOQevOJqDOqGlCoaZwfEBlase9Z8Sm6DtQW_D6wAUzXM4tjLxolGkzxN-d7w">⚠ Muster Roll Tracking</a></li>
+        <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/dynamic_material_track.aspx?payload=Rd9JT86TnRSUE06mn2MP9qqAYkYfinxAG3ARufRudtS0Dc8vL7jdicqlHI1tdrOjfPY7T0dwtqTDxBKOyeNmEURIySI4e0vj21M94H0NMaWZ1cNgIv_DLfXOdWEI5mTQokdqirSN4TTB-AEf53zOLQ">⚠ Material Bill Tracking</a></li>
+        <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/dynamic_mat_track.aspx?payload=pl-G7ThNEsDAGgd-ZraY08Gh-itwU-uDWKtoCFWzv3DDLB2DrTFkB5BWz8kJDHJgpmLuEvOiv_So0gWDs-Td4CvJwOFcs3JQTj_1zct3zwdncO-5FP7SeiBhZiRix5bKTz7bJvmKMT5rr66co1N-Bg">⚠ Mate Tracking</a></li>
+        
+    </ul>
+</aside>
+
+<main class="main">
+    <div class="page-title">
+        <h2>Pattiam Grama Panchayath Monitoring Dashboard</h2>
+        <p>Financial Year 2026-27 • Monitor scheme implementation, works, beneficiaries and financial progress.</p>
+    </div>
+
+    <section class="filter-box">
+        <div class="filter-title">🔎 Report Selection</div>
+        <div class="filters">
+            <div><label>District</label><select id="district"><option value="">Select District</option><option>KANNUR</option></select></div>
+            <div><label>Block Panchayath</label><select id="block"><option value="">Select Block</option><option>KUTHUPARAMBA</option></select></div>
+            <div><label>Gram Panchayath</label><select id="panchayath"><option value="">Select Panchayath</option><option>PATTIAM</option></select></div>
+            <div><label>Financial Year</label><select id="year"><option>2026-27</option></select></div>
+        </div>
+        <button class="report-button" onclick="applyFilter()">📊 VIEW REPORT</button>
+    </section>
+
+    <section class="quick-cards">
+        <div class="quick-card"><h4>FINANCIAL YEAR</h4><div class="quick-number">2026-27</div><div class="quick-small">Current Year</div></div>
+        <div class="quick-card"><h4>DISTRICT</h4><div class="quick-number">KANNUR</div><div class="quick-small">Kerala</div></div>
+        <div class="quick-card"><h4>BLOCK PANCHAYATH</h4><div class="quick-number" style="font-size:19px">KUTHUPARAMBA</div><div class="quick-small">Development Block</div></div>
+        <div class="quick-card"><h4>GRAMA PANCHAYATH</h4><div class="quick-number">PATTIAM</div><div class="quick-small">Panchayath Level</div></div>
+    </section>
+
+    <div class="dashboard-grid">
+        <div>
+            <section class="panel">
+                <div class="panel-title">👥 GP Level Logins</div>
+                <ul class="link-list">
+                    <li><a href="https://vbgramgde2.dord.gov.in/VBGRAMG/Login.aspx?payload=qFLAs3Rb6X3ZR4h-D1PKcAke2xycQ2TWIdiko8vozyvUlg5BTWxfqJYME0g-ZSIh">👥 Data Entry</a></li>
+                    <li><a href="https://vbgramgde2.dord.gov.in/VBGRAMG/Login.aspx?payload=aoz93jmHrBHzrVIFH10MP0KO3PlUYUvciGzYHujEtIFu_rd_2pe-AR2GCkXzDTDI">📘 E-MBook GP Level</a></li>
+                    <li><a href="https://vbgramgde2.dord.gov.in/VBGRAMG/Login.aspx?payload=jgbIcad03rPMxd2x6hPFGKwMK-oFgNHlJXD8-J7rMwKrKN-fEt7fcDW_epazOcc2">📘 E-MBook BP Level</a></li>
+                    <li><a href="https://vbgramgweb1.dord.gov.in/VBGRAMG/FTO/Login.aspx?&level=HomeACGP&state_code=16">👤 First Signatory</a></li>
+                    <li><a href="https://vbgramgweb1.dord.gov.in/VBGRAMG/FTO/Login.aspx?&level=HomeWLGP&state_code=16">👤 Second Signatory</a></li>
+                    <li><a href="https://secure.dord.gov.in/securev2/">🔐 SECURE</a></li>
+                    <li><a href="https://ksmart.lsgkerala.gov.in/ui/home/employee/login">🏛️ KSMART</a></li>
+                    <li><a href="https://unifiedportal-emp.epfindia.gov.in/epfo/">👤 EPFO</a></li>
+                    <li><a href="https://bims.treasury.kerala.gov.in/index.php/login">💰 BIMS</a></li>
+                </ul>
+            </section>
+
+            <section class="panel">
+                <div class="panel-title">📊 Progress Reports</div>
+                <ul class="link-list">
+                    <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/state_html/empstatusnewall_scst.aspx?payload=apPtAaqE8aHo1QB15deNyQ8-CQL4E8tyNpK3uMx2TYmZkf8_4QYJKV_fGx3o6Ai_sCwEbV8ZOrqQFe1ovWJkwfQcoa_EVBtMmtiUnDTkKo_U7oKtigg-hTfwb2l00PH0x2YDlFaWztidB7blSK2BMOq5Wgh1dQmg66FiK6yWyOPUvVzIQdydidb-qAMkxhY703b0bBhIlvcaR3FfuUq0CD_g7Yn-DXxIri2DpD56_viKWXWDY9ZBi7i4Gma8SFPN-uXRTs_twFOoHAFUJkfFbw">📊 SC-ST Employment Status</a></li>
+                    <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/state_html/pmsr.aspx?payload=9YldfCTClKz0b_jCqsHUEjOk4pz_wKUXw6CIFA3mMzaJAlmCMGKFIu__C56jV3XKHiicOgkI_ud4gLXj1iQagCTZ8p6OK7sM-jxJuq-DzwEvsEv6yKBJb9lXbu5uOitO_XF71VtPzkBHvc6XxZj9nEBL3NmZkyIcHmeQ4sZrTM6xk7GeCnpiTWcqUSoMqxeH1arhVRf1UWQ7mJGvOAr92WPIhL7MkiBWoL3pXczRYyFHqvsnjDXGXEI-JqgZ1JynSQzA4gVp9sxJ-UfkXgZnxA">📊 Period Wise Employment Provided</a></li>
+                    <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/takenup_compwrk.aspx?payload=H-t764jZJvN2mxPVct6kXTavTBnswTU_WpQdiitIEjmZn9LUfiEOLGi2UMIVgCEvd1BzOpOPwBavPfNH3pPU1lXzCZn4C2BlAkg5uYN1lg4RNNDnsNZRYpGf4ufmDmRWd3Yx_1oObaOOXrdnWyNueC-s2PDWIfjCzxvpKXCup7EjqnaE96nAi1uUKUmMrZqOS4tQpTtA79oYOmkyhMSmCyew_T0gXqHQmN-TyQalN10ixz8n5t2sWH5n8DEZo5hznmWGAr7k6HWddkUkkxkqZ7BTIYWeSEXH1u7tahgSbdG9JLhunTl3fvHs2AUb4L9O">📊 Yearly Work Completion Rate</a></li>
+                    <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/age_reg_emp.aspx?payload=xWyVID869bmFv7NDBWEtWt098qNJokIrX_I4QzcomWvd5dhOfk83SJYR73-bBCInKXFbH6MPkUc0PMUiaehE4pbNJbiunXvtBphHLhRozSgX-EWE4426z9UUKCAgKPW_LiCAsC0_GkRIsXyzO_DevTyLJ9DM0QaG2VPSnDH26jzMaLf-0eHCC5-1qY1XxJYnMMuqXzduN7dW8fWlZM-gLRRRJZRW3uXz52zR8BzD_N05CB5kaMMUKUKMVOc-rSlIK_Tw3O3IfMBet0NM9Dme2w">📊 Agewise Persons Employed</a></li>
+                    <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/citizen_html/demregister.aspx?payload=JOBFaTmhvMoIshf9UrGdrGbJnaNnwBKX7PoI-9CsoeDtumsoN8a1ca_7peHHMuR1fxb5GQkJYt54E2kM43zoocUcKcvBbuTXCjiHPvN4QbL1BFi7auxWCKE8oduWvTKVWDZ3A4K9Ex1nPBIHRTC4250M2gNuV8XV3kkLA87xodTjKotXsgDmA9K0A_SOomaStWzMyw5DBZ8FS5uRixoz-7r88bqXK3M47D1PnXfnLbr4-IeqsEEwPhU1ciS97bGShqWTP74F_PPdyOwPzsZiNg">📊 Progress Report</a></li>
+                </ul>
+            </section>
+
+
+
+<section class="panel">
+                <div class="panel-title">📥Downloads </div>
+                <ul class="link-list">
+                    <li><a href="https://play.google.com/store/apps/details?id=com.dord.nmms&pcampaignid=web_share">📲NMMS</a></li>
+<li><a href="https://play.google.com/store/apps/details?id=nic.hp.vbgramg&pcampaignid=web_share">📱JanGRAM</a></li>
+<li><a href="https://vbgramgmatt.dord.gov.in/vbgramg/CIRCULAR_NEW.aspx">📝Circulars MORD </a></li>
+<li><a href="https://vbgramgmatt.dord.gov.in/vbgramg/document.aspx">📓Documents MORD </a></li>
+<li><a href="https://vbgramg.dord.gov.in/vbgramg/WriteReaddata/data/The_VB-GRAMG-Act_2025.pdf">📜VB-GRAM(G) ACT 2025 </a></li>
+<li><a href="https://drive.google.com/file/d/1VcGxNa_-Wjrqu8_6tsRiMKkfzX8jMuLx/view?usp=sharing">📜VB-GRAM(G)-Keralam ACT 2026 </a></li>
+
+                    
+                </ul>
+            </section>
+
+
+
+
+
+
+
+        </div>
+
+        <div>
+            <section class="panel">
+                <div class="panel-title">💰 Financial Reports</div>
+                <div class="category">FTO Status</div>
+
+
+                <ul class="link-list">
+<li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/FTO/FTOReport.aspx?payload=DZevXA94AZOoRkKUbtws-4QjbPrd52b7iell6uJWTi0ejXvr3fOLrB-SoxGGoS1iSLutniq7cCbkiy4lgUUkPXatgASwm9coPnNeFCj314tK_FXqcAV7lQkUKwQnIWRFfe47en9ZWP4DrFCC7xInmX-hLFb4Htzwl2e9eD2oapyXIePOtIoHfR1uCBdPQ_Dp1b6lhOtX6p8OfnjOgy1Gh7Devsxv1FATkGxSUv2hVcaM8pYjaiyIpPVGwxBpiCDXuHS5bB5sS6Ql4s3kDJ1g-Ivt4P4w1KsN_rQewAVIxszljEVes2haT8kcy-GBQKvm">➤ Consolidated FTO</a></li>
+                    <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/FTO/fto_sign_detail.aspx?payload=GsRfrXGVPWcfMqoWo3tJbDteJ_IkrgzHE37ZBOMAnH6CEd45zxb7pxRNYhaI1BGUabHzUGpT3NJO2A9JemrZwsCnmlTBaHLB-NAE_YY8Ux7vj6F1D_CPdwGzP2D4RnsTby1rKwRUXU-S9cq_Y8n39oCjxwZbyu9d_8aLuRydZKCpOoylHaFSrAxpThA0uyYT4E-DqamQrP_LE9ANbiIYQymki0t2LH6o3gM8nK32SJjYl7rG_IaZh5KcLscujmi8Jo1T0LRiCPv1AIQSUbtW5uwZB3ZHRkTZoYR7taZP-zAsyImPRfBu1EF8T2n8gSsAlRGgNUhGKgN0kTosQFl0xx9kKpmW2cj0xv7pIpsR_oGYIgVifCpE8nn2fkTkmvS9">➤ Unskilled FTO</a></li>
+                    <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/FTO/FTOReport.aspx" target="_blank">➤ Skilled / Semi-Skilled FTO</a></li>
+                    <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/FTO/FTOReport.aspx" target="_blank">➤ Material FTO</a></li>
+                    <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/FTO/FTOReport.aspx" target="_blank">➤ Admin FTO</a></li>
+                </ul>
+                <div class="category">Financial Statements</div>
+                <ul class="link-list">
+                    <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/writereaddata/citizen_out/funddisreport_1602006_eng_2627_.html">💰 Financial Statement</a></li>
+                    <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/state_html/outlayvscomest.aspx?payload=aXdGveIcnJvImgkHHC-IEQdjesk9zoPo268bm4lPcRNYqEqYygUTSB6ylstPZ4zVohHjpW1QGQCy5BSIww9p3Cnb-x4qVM_cYlPJgx81WE0pbl4bgPXCagi9wJbXgrxGg9Ys-_gcPL06N3k5h4NgIaT3Mf-ijc0y6gIK1rSVrzqX0zHNRPkpVBz8CjGl79qKBdVSXgApps_njPAQ9XS7YbS1_mnQ6s003Oib2xMbU-hfhTmlaXlS4gQgjKWVjwLEOVy9_qZQHrc63QYHeG01YQ8t5soeHDbtsi8wdx_6ToFqCyG3LQ_DdNQJdu7dSpr9">💰 Outlays &amp; Outcomes</a></li>
+                    <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/citizen_html/continexpnew.aspx?payload=rcuoH6hoqW33HlTgVDaWdStU2Zbeq418lOxkBd3D-lJGHJUseQrXmoyccOS0I8nXAcmXbrHexbt5auT_lghgDO7ps4NMQZYOrGeQYZm1C-KaW7vj2JO44c37tsIx4LpacVjp7yA_NYpYd7-ACw6Nx3PRRR1jd0MzXva7aSeC9Aun-oQCxEsbD-3QgM4AQy00ZoFMu8EwHgAiGKb77zZXCd_jb4tq6uKHeb2eXO8j27A39MJiEqb0ddSMSK_zSE_aU2AdaYMydmm2Ve0pmhhu4Dsu4Aid8yBrJ2vd_Q0or2E2i-7CUIkOwIFKJK_8iMQs">💰 Administration Expenses</a></li>
+                </ul>
+            </section>
+
+            <section class="panel">
+                <div class="panel-title">⚠️ Tracking &amp; Alerts</div>
+                <div class="alert alert-success">✔ System monitoring is active.</div>
+                <div class="alert alert-warning">⚠ Please check pending Muster Roll entries.</div>
+                <div class="alert alert-warning">⚠ Review pending Material Bill Tracking.</div>
+                <div class="alert alert-danger">❗ Verify FTO status and pending payments.</div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-title">📑 Citizen Services</div>
+                <ul class="link-list">
+                    <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/Citizen_html/Musternew.aspx?payload=7N0leJCj0iE3T2torLVlQLeS35K1U75d68tpvHjlUF7XbUEf70CaPLgerV28Zdl4JfOZXESG2GZXyMOdH4B34hwLHCLEgs4TRvIuLzHnQVDM4EgVZZhKhZ5yAIxqLSc7KaVquVT5s6pIzlBymJ8NeJgUKgVmQmlRU_iOsQy7nzM3BmW6DL3UI7s-w8TShfRusbfX7NcX9pGrUj_ZfaOXdA9Ib6kN3moM9-UvNe1KOljucj00e82viLHr_sfUnddWXc3bHXnYpTwaY3BTRS3fnqmm0jPXCoYV8y36D93lbrWQuEV03gE4IEV-K6b_7JHgSnVHlcoUOUKpKZ14EMzbKA">📑 Muster Rolls</a></li>
+                    <li><a href="https://vbgramgrep.dord.gov.in/VBGRAMG/state_html/emuster_wagelist_rpt.aspx?payload=rz51zj5GVHXD8X-Lxo0NxuDgv65mW-DXikqnqEKq9uxFOjyaRGgbok_4w8mBlfzXT2JOgLQhK9XD7e01x0Jc06rdZSn-bJKakG_eSW4go3Kw6wvGpUeBIsTzw8Ijcwa37TVxm6fFY8s4Vg56hhWHxkL8IaCiT7opJXV-2PMaNRKrnQTuue_rej3w11271Qge72DddAwDxYrNx2XRASGfEou1zpYr4Vw93ImV3UNT8_LG9ahYEeI4ZfFsbnMfD75ioeL_alRwWii_oe5ok7WHRQ">📑 E-Muster Roll &amp; Wagelist</a></li>
+                </ul>
+            </section>
+        </div>
+    </div>
+</main>
+</div>
+
+<footer>
+    VBGRAMG Grama Panchayath Level Monitoring System<br>
+    Developed and Maintained by <strong>Jibin V K – AITA, Pattiam GP</strong> © 2026
+</footer>
+
+<script>
+function applyFilter(){
+    const district=document.getElementById("district").value;
+    const block=document.getElementById("block").value;
+    const panchayath=document.getElementById("panchayath").value;
+    const year=document.getElementById("year").value;
+
+    if(!district || !block || !panchayath){
+        alert("Please select District, Block Panchayath and Gram Panchayath.");
+        return;
+    }
+
+    alert(
+        "Report Selection\n\n"+
+        "District: "+district+"\n"+
+        "Block: "+block+"\n"+
+        "Gram Panchayath: "+panchayath+"\n"+
+        "Financial Year: "+year
+    );
+}
+</script>
+</body>
+</html>
